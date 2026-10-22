@@ -1,0 +1,113 @@
+{
+	"name": "@jeftelabs/prompts",
+	"version": "1.0.0",
+	"description": "Wrapper over enquirer with better support for testing",
+	"type": "module",
+	"files": [
+		"build",
+		"!build/bin",
+		"!build/examples",
+		"!build/tests"
+	],
+	"exports": {
+		".": "./build/index.js",
+		"./types": "./build/src/types.js"
+	},
+	"scripts": {
+		"pretest": "npm run lint",
+		"test": "c8 npm run quick:test",
+		"lint": "eslint .",
+		"format": "prettier --write .",
+		"typecheck": "tsc --noEmit",
+		"clean": "del-cli build",
+		"precompile": "npm run lint && npm run clean",
+		"compile": "tsdown && tsc --emitDeclarationOnly --declaration",
+		"build": "npm run compile",
+		"version": "npm run build",
+		"prepublishOnly": "npm run build",
+		"quick:test": "node --import=@jeftelabs/exec --enable-source-maps bin/test.ts",
+		"prepare": "husky",
+		"commitlint": "commitlint --edit",
+		"commit": "cz"
+	},
+	"devDependencies": {
+		"@arapucajs/eslint-config": "^1.1.2",
+		"@arapucajs/prettier": "^1.1.1",
+		"@arapucajs/tsconfig": "^1.0.0",
+		"@jeftelabs/exec": "^1.0.1",
+		"@t8ngs/assert": "^1.0.0",
+		"@t8ngs/expect-type": "^1.2.0",
+		"@t8ngs/runner": "^1.0.0",
+		"@types/node": "^25.9.9",
+		"c8": "^10.1.3",
+		"commitizen": "^4.3.2",
+		"cz-conventional-changelog": "^3.3.0",
+		"del-cli": "^7.0.0",
+		"eslint": "^9.39.1",
+		"husky": "^9.1.7",
+		"prettier": "^3.7.4",
+		"release-it": "^19.1.0",
+		"tsdown": "^0.17.3",
+		"typescript": "^5.9.3"
+	},
+	"dependencies": {
+		"@jeftelabs/colors": "^1.0.0",
+		"@jeftelabs/exception": "^1.0.1",
+		"@jeftelabs/object-builder": "^1.0.0",
+		"enquirer": "^2.4.1"
+	},
+	"homepage": "https://github.com/jeftelabs/prompts#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/jeftelabs/prompts.git"
+	},
+	"bugs": {
+		"url": "https://github.com/jeftelabs/prompts/issues"
+	},
+	"keywords": [
+		"enquirer",
+		"prompts"
+	],
+	"author": "Jefte Costa <jefteamorim@gmail.com>",
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	},
+	"tsdown": {
+		"entry": [
+			"./index.ts",
+			"./src/types.ts"
+		],
+		"outDir": "./build",
+		"clean": true,
+		"format": "esm",
+		"minify": "dce-only",
+		"fixedExtension": false,
+		"dts": false,
+		"treeshake": false,
+		"sourcemaps": false,
+		"target": "esnext"
+	},
+	"c8": {
+		"reporter": [
+			"text",
+			"html"
+		],
+		"exclude": [
+			"tests/**",
+			"src/enquirer.ts"
+		]
+	},
+	"prettier": "@arapucajs/prettier",
+	"config": {
+		"commitizen": {
+			"path": "./node_modules/cz-conventional-changelog"
+		}
+	},
+	"husky": {
+		"hooks": {
+			"prepare-commit-msg": "exec < /dev/tty && npx cz --hook || true"
+		}
+	}
+}
