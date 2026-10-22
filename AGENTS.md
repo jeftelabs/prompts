@@ -4,7 +4,7 @@ Leia este arquivo antes de alterar o projeto. Use `src/`, `tests/`, exemplos, `p
 
 ## Projeto
 
-`@jeftelabs/prompts` é um wrapper ESM sobre Enquirer que fornece prompts tipados e mecanismos de mock para facilitar testes. A API pública é exportada por `index.ts`; os tipos ficam em `src/types.ts`. As implementações de prompt ficam em `src/`, e os testes em `tests/`.
+`@jeftelabs/prompts` é um wrapper ESM sobre Enquirer que fornece prompts tipados e mecanismos de mock para facilitar testes. A API pública é exportada por `index.ts`; os tipos ficam em `src/types.ts`. As implementações ficam em `src/`, e os testes em `tests/traps/`.
 
 ## Documentação obrigatória
 
@@ -21,7 +21,7 @@ Leia este arquivo antes de alterar o projeto. Use `src/`, `tests/`, exemplos, `p
 1. Leia este arquivo e a documentação relevante em `docs/`.
 2. Examine as implementações em `src/`, os testes relacionados e exemplos.
 3. Confira exports em `index.ts`, scripts/dependências em `package.json`, configuração TS/ESLint e workflows.
-4. Preserve os contratos da API pública e o suporte a mocks usado nos testes.
+4. Preserve os contratos públicos, os tipos por prompt, o comportamento de traps e o cancelamento tipado.
 
 ## Comandos
 
@@ -32,11 +32,12 @@ Leia este arquivo antes de alterar o projeto. Use `src/`, `tests/`, exemplos, `p
 - `npm run build`: gera bundle ESM e declarações.
 - `npm run format`: aplica Prettier aos arquivos.
 
-Confirme os scripts em `package.json`. Não execute comandos de escrita sem necessidade. Não adicione ou rode testes salvo solicitação do usuário ou quando necessário em commit previamente autorizado.
+Confirme scripts em `package.json`. `npm run format` escreve arquivos. Não adicione ou rode testes salvo solicitação do usuário ou quando necessário em commit autorizado.
 
 ## Convenções
 
 - Siga ESM, exports definidos em `package.json`, TypeScript e estilo ESLint/Prettier.
+- O runner depende do `tsconfig.json` e do loader `@jeftelabs/exec`; mantenha coerente a opção `rewriteRelativeImportExtensions`.
 - Não altere artefatos gerados em `build/` como fonte.
 - Use Conventional Commits.
 - Faça commit, push ou PR apenas quando solicitado.

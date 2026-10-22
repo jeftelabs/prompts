@@ -1,6 +1,6 @@
 # Orientações para Claude e agentes de IA
 
-As instruções canônicas estão em [`AGENTS.md`](./AGENTS.md). Consulte também as páginas pertinentes em [`docs/README.md`](./docs/README.md). Este repositório contém `@jeftelabs/prompts`, um wrapper ESM sobre Enquirer com prompts tipados e suporte a mocks para testes.
+As instruções canônicas estão em [`AGENTS.md`](./AGENTS.md). Consulte também as páginas pertinentes em [`docs/README.md`](./docs/README.md). Este repositório contém `@jeftelabs/prompts`, um wrapper ESM sobre Enquirer com prompts tipados e suporte a traps para testes.
 
 ## Documentação obrigatória para toda alteração
 
@@ -12,14 +12,17 @@ As instruções canônicas estão em [`AGENTS.md`](./AGENTS.md). Consulte també
 - Atualize README quando instalação, API, compatibilidade ou exemplos mudarem.
 - Confirme cada afirmação no código e nos testes; não finalize com documentação pendente.
 
-## Mapa inicial
+## Mapa do projeto
 
-- `index.ts`: exports públicos do pacote.
-- `src/`: implementação base, integração Enquirer, opções e classes de prompts.
-- `tests/`: cobertura automatizada.
-- `examples/`: exemplos de consumo.
-- `tsconfig.json`: configuração baseada em `@arapucajs/tsconfig/tsconfig.package.json`; mantenha o extends alinhado às dependências declaradas e disponíveis.
+- `index.ts`: exporta `Prompt` e o namespace `errors`.
+- `src/base.ts`: métodos públicos de prompt e despacho para prompt real ou trap.
+- `src/enquirer.ts`: integra Enquirer e normaliza cancelamento para `E_PROMPT_CANCELLED`.
+- `src/mocked_prompt.ts`: respostas e asserções usadas pelos traps.
+- `src/types.ts`: opções, callbacks e escolhas tipadas.
+- `src/prompt_options.ts`, `src/colors.ts`, `src/icons.ts`: apresentação no terminal.
+- `tests/traps/`: testes por tipo de prompt e comportamento de traps.
+- `examples/index.ts`: exemplo interativo que pode solicitar entrada de terminal.
 
 ## Práticas
 
-Leia `AGENTS.md`, a documentação relevante e o código antes de alterar. Confirme comandos em `package.json`. Preserve a API pública, ESM, os mocks e as convenções ESLint/Prettier. Use Conventional Commits; faça commit, push ou PR apenas se solicitado. Não descarte alterações preexistentes nem exponha credenciais.
+Leia `AGENTS.md`, a documentação relevante e o código antes de alterar. Confirme comandos em `package.json`. Preserve a API pública, ESM, os mocks e as convenções ESLint/Prettier. Mantenha a configuração do runner alinhada às dependências. Use Conventional Commits; faça commit, push ou PR apenas se solicitado. Não descarte alterações preexistentes nem exponha credenciais.

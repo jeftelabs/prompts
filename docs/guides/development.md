@@ -2,22 +2,21 @@
 
 ## Estrutura
 
-`index.ts` define os exports do pacote. `src/` contém as classes de prompt e sua integração com Enquirer, `tests/` valida comportamentos automatizados e `examples/` demonstra consumo. Consulte esses diretórios antes de adicionar uma implementação para seguir os contratos existentes.
+`index.ts` define a superfície publicada. `src/` contém API, integração com Enquirer, mocks, tipos e formatação; `tests/traps/` agrupa testes por método; `examples/index.ts` é um exemplo interativo e pode aguardar terminal. `bin/test.ts` configura `@t8ngs/runner` para descobrir `tests/**/*.spec.ts`.
 
-## Fluxo local
+## Requisitos de configuração
 
-1. Instale as dependências com `npm install`.
-2. Execute `npm run lint` para validar ESLint e Prettier.
-3. Execute `npm test` para lint prévio e testes com cobertura.
-4. Execute `npm run typecheck` quando alterar tipos ou implementação TypeScript.
-5. Execute `npm run build` para verificar bundle e declarações.
+`tsconfig.json` estende `@arapucajs/tsconfig/tsconfig.package.json`, declarada em `devDependencies`, e define `rewriteRelativeImportExtensions: true`. O loader `@jeftelabs/exec` consulta esse tsconfig antes de executar arquivos TypeScript; portanto, um `extends` apontando para pacote ausente impede até o bootstrap dos testes. Mantenha o caminho e dependência sincronizados. A opção de reescrita é necessária para os imports relativos `.ts` usados pelo runner.
 
-`npm run format` modifica arquivos; prefira formatar apenas os arquivos envolvidos ou revisar o diff após sua execução.
+## Comandos
 
-## Documentação como parte da mudança
+- `npm run lint`: valida ESLint/Prettier.
+- `npm test`: executa `pretest` (lint), depois cobertura c8 e `quick:test`.
+- `npm run quick:test`: inicia `bin/test.ts` pelo loader `@jeftelabs/exec`.
+- `npm run typecheck`: executa `tsc --noEmit`.
+- `npm run build`: lint, limpa `build/`, gera bundle pelo tsdown e declarações pelo TypeScript.
+- `npm run format`: aplica Prettier e altera arquivos.
 
-Toda mudança de comportamento, API, opções, exemplos, dependências, scripts ou configuração exige atualização detalhada da documentação em `docs/` e, quando pertinente à instalação ou uso público, do README. Registre novos documentos neste índice. Explique também limitações observadas nos testes para que usuários e agentes não presumam cobertura ou comportamento não implementado.
+## Ao modificar
 
-## TypeScript e runner
-
-O `tsconfig.json` estende a configuração de pacote distribuída por `@arapucajs/tsconfig`, que deve estar instalada conforme `package.json`/lockfile. O projeto ativa `rewriteRelativeImportExtensions` para compatibilidade com imports relativos usados no TypeScript. Ao alterar esse encadeamento, confira tanto o typecheck/build quanto a inicialização de `npm run quick:test`.
+Documente cada alteração na mesma tarefa. Se alterar método, opção, retorno ou trap, atualize a referência pública e os guias; se mudar configuração ou comandos, atualize referências de desenvolvimento/build. Inclua páginas novas em `docs/README.md` e atualize README quando necessário para quem instala/usa o pacote.

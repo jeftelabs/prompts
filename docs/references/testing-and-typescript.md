@@ -1,26 +1,21 @@
 # Referência: testes e TypeScript
 
-## Scripts
+## Scripts de teste
 
-Os comandos abaixo vêm de `package.json`:
+- `npm test` roda lint pelo lifecycle `pretest` e depois `c8 npm run quick:test`.
+- `npm run quick:test` executa `node --import=@jeftelabs/exec --enable-source-maps bin/test.ts`.
+- `bin/test.ts` configura `@t8ngs/runner` com arquivos `tests/**/*.spec.ts`, além de plugins de assert e expect-type.
+- `npm run typecheck` chama `tsc --noEmit`.
 
-- `npm run lint` executa ESLint.
-- `npm test` executa lint via `pretest` e depois `c8 npm run quick:test`.
-- `npm run quick:test` carrega `bin/test.ts` pelo loader `@jeftelabs/exec`.
-- `npm run typecheck` executa `tsc --noEmit`.
-- `npm run build` compila bundle ESM e declarações TypeScript.
+Os testes verificam prompts com traps; não iniciam uma sessão visual real com Enquirer. Para validar cancelamento da integração real ou rendering de terminal, acrescente cobertura de integração apropriada e documente-a.
 
-## Resolução do tsconfig
+## tsconfig e loader
 
-`tsconfig.json` estende `@arapucajs/tsconfig/tsconfig.package.json`. Esse pacote precisa ser resolvível a partir do diretório do projeto; ele está listado em `devDependencies`. O nome do pacote e o caminho do arquivo devem permanecer sincronizados com a dependência instalada. Um `extends` apontando para outro pacote causa falha do loader ao descobrir o tsconfig antes de executar os testes.
+`tsconfig.json` estende `@arapucajs/tsconfig/tsconfig.package.json` e habilita `rewriteRelativeImportExtensions`. A dependência está em `devDependencies`; o `@jeftelabs/exec` usa o tsconfig para carregar TypeScript. O `extends` precisa apontar para o pacote instalado. O projeto já teve caminho configurado para `@adonisjs/tsconfig`, que não era dependência e fazia o loader falhar antes de iniciar os testes; o caminho foi alinhado ao pacote declarado.
 
-`rewriteRelativeImportExtensions: true` está definido localmente para permitir imports relativos com extensão TypeScript no código consumido pelo runner. Preserve essa opção enquanto o runner usar esses imports.
+## Diagnóstico de `npm test`
 
-## Diagnóstico
-
-Se `npm test` falhar:
-
-1. Observe se a falha ocorreu em `pretest`/ESLint ou durante a inicialização de `quick:test`.
-2. Para erro de resolução de config, compare `tsconfig.json` com o pacote em `devDependencies` e verifique a instalação com `npm ls @arapucajs/tsconfig`.
-3. Para erro de extensão `.ts`, confira `rewriteRelativeImportExtensions` e os imports relativos.
-4. Para falhas após o início do runner, investigue os testes e o código referenciado; não confunda falha de bootstrap com falha de asserção.
+1. Se falhar em `pretest`, corrija primeiro ESLint/Prettier.
+2. Se o loader relata config `extends` ausente, compare `tsconfig.json` com as dependências e `npm ls @arapucajs/tsconfig`.
+3. Se o loader rejeita imports `.ts`, confira `rewriteRelativeImportExtensions`.
+4. Se `quick:test` iniciou e apresenta falha de asserção, investigue o teste/código indicado: isso é diferente de falha de bootstrap.
